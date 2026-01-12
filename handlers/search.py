@@ -5,19 +5,71 @@ from config import SEARCH_COST
 
 from formats.indian_number import indian_number_format
 from formats.pakistan_number import pakistan_number_format
+from formats.vehicle_rc import vehicle_rc_format
+from formats.vehicle_to_mobile import vehicle_to_mobile_format
 from formats.aadhaar_family import aadhaar_family_format
+from formats.freefire_uid import freefire_uid_format
 from formats.bank_ifsc import bank_ifsc_format
 from formats.call_trace import call_trace_format
 from formats.fampay import fampay_format
 
+
 API_MAP = {
-    "indian": ("https://subhxcosmo-osint-api.onrender.com/api?key=VNIOX&type=mobile&term={}", indian_number_format),
-    "pak": ("https://paknum.amorinthz.workers.dev/?key=AMORINTH&number={}", pakistan_number_format),
-    "aadhaar": ("https://subhxcosmo-osint-api.onrender.com/api?key=VNIOX&type=id_family&term={}", aadhaar_family_format),
-    "ifsc": ("https://ab-ifscinfoapi.vercel.app/info?ifsc={}", bank_ifsc_format),
-    "trace": ("https://ab-calltraceapi.vercel.app/info?number={}", call_trace_format),
-    "fampay": ("https://fampay-2-number.vercel.app/get-number?id={}", fampay_format),
+    # 1️⃣ Indian Number
+    "indian": (
+        "https://subhxcosmo-osint-api.onrender.com/api?key=VNIOX&type=mobile&term={}",
+        lambda text: indian_number_format(text)
+    ),
+
+    # 2️⃣ Pakistan Number
+    "pak": (
+        "https://paknum.amorinthz.workers.dev/?key=AMORINTH&number={}",
+        lambda text: pakistan_number_format(text)
+    ),
+
+    # 3️⃣ Vehicle RC Details
+    "vehicle": (
+        "https://vnioxcyber.vercel.app/api/vehicle?rc={}",
+        lambda json_data: vehicle_rc_format(json_data)
+    ),
+
+    # 4️⃣ Vehicle → Owner Mobile
+    "vehmobile": (
+        "https://subhxcosmo-osint-api.onrender.com/api?key=VNIOX&type=vehicle_num&term={}",
+        lambda text: vehicle_to_mobile_format_from_text(text)
+    ),
+
+    # 5️⃣ Aadhaar → Family
+    "aadhaar": (
+        "https://subhxcosmo-osint-api.onrender.com/api?key=VNIOX&type=id_family&term={}",
+        lambda text: aadhaar_family_format(text)
+    ),
+
+    # 6️⃣ Free Fire UID
+    "ff": (
+        "https://api-cr-ffinfo.kesug.com/ff.php?uid={}",
+        lambda json_data: freefire_uid_format(json_data)
+    ),
+
+    # 7️⃣ Bank IFSC
+    "ifsc": (
+        "https://ab-ifscinfoapi.vercel.app/info?ifsc={}",
+        lambda text: bank_ifsc_format(text)
+    ),
+
+    # 8️⃣ Indian Call Trace
+    "trace": (
+        "https://ab-calltraceapi.vercel.app/info?number={}",
+        lambda text: call_trace_format(text)
+    ),
+
+    # 9️⃣ FamPay
+    "fampay": (
+        "https://fampay-2-number.vercel.app/get-number?id={}",
+        lambda text: fampay_format(text)
+    ),
 }
+
 
 @Client.on_message(filters.command(API_MAP.keys()))
 async def search_handler(client, message):
@@ -38,6 +90,13 @@ async def search_handler(client, message):
 
     try:
         res = requests.get(url.format(term), timeout=30)
-        await message.reply(formatter(res.text), disable_web_page_preview=True)
+
+        # JSON based APIs
+        if cmd in ["vehicle", "ff"]:
+            data = res.json()
+            await message.reply(formatter(data), disable_web_page_preview=True)
+        else:
+            await message.reply(formatter(res.text), disable_web_page_preview=True)
+
     except Exception as e:
         await message.reply("⚠️ API ERROR\nTry again later")
