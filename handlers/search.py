@@ -59,9 +59,21 @@ API_MAP = {
 
 
 # ===============================
-# SEARCH HANDLER (FINAL)
+# SEARCH HANDLER (FINAL & SAFE)
 # ===============================
-@Client.on_message(filters.command())
+@Client.on_message(
+    filters.command([
+        "num",
+        "paknum",
+        "vehicle",
+        "vehmobile",
+        "aadhar",
+        "ff",
+        "ifsc",
+        "numtrace",
+        "fam"
+    ])
+)
 async def search_handler(client, message):
     user_id = message.from_user.id
 
@@ -92,24 +104,16 @@ async def search_handler(client, message):
         )
 
     # -------------------------------
-    # COMMAND NORMALIZE
+    # NORMALIZE COMMAND
     # -------------------------------
     cmd = message.command[0][1:].lower()
     term = message.command[1]
 
     # -------------------------------
-    # INVALID COMMAND SAFETY
+    # SAFETY CHECK (extra)
     # -------------------------------
     if cmd not in API_MAP:
-        return await message.reply(
-            "❌ INVALID COMMAND\n\n"
-            "✅ Available Commands:\n"
-            "/num  /paknum\n"
-            "/vehicle  /vehmobile\n"
-            "/aadhar  /ff\n"
-            "/ifsc  /numtrace\n"
-            "/fam"
-        )
+        return await message.reply("❌ INVALID COMMAND")
 
     api_url, formatter = API_MAP[cmd]
 
