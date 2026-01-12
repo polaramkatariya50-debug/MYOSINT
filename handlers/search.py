@@ -27,16 +27,16 @@ API_MAP = {
         lambda text: pakistan_number_format(text)
     ),
 
-    # 3️⃣ Vehicle RC Details
+    # 3️⃣ Vehicle RC
     "vehicle": (
         "https://vnioxcyber.vercel.app/api/vehicle?rc={}",
-        lambda json_data: vehicle_rc_format(json_data)
+        lambda data: vehicle_rc_format(data)
     ),
 
     # 4️⃣ Vehicle → Owner Mobile
     "vehmobile": (
         "https://subhxcosmo-osint-api.onrender.com/api?key=VNIOX&type=vehicle_num&term={}",
-        lambda text: vehicle_to_mobile_format_from_text(text)
+        lambda text: vehicle_to_mobile_format(text)
     ),
 
     # 5️⃣ Aadhaar → Family
@@ -48,7 +48,7 @@ API_MAP = {
     # 6️⃣ Free Fire UID
     "ff": (
         "https://api-cr-ffinfo.kesug.com/ff.php?uid={}",
-        lambda json_data: freefire_uid_format(json_data)
+        lambda data: freefire_uid_format(data)
     ),
 
     # 7️⃣ Bank IFSC
@@ -57,7 +57,7 @@ API_MAP = {
         lambda text: bank_ifsc_format(text)
     ),
 
-    # 8️⃣ Indian Call Trace
+    # 8️⃣ Call Trace
     "trace": (
         "https://ab-calltraceapi.vercel.app/info?number={}",
         lambda text: call_trace_format(text)
@@ -85,18 +85,21 @@ async def search_handler(client, message):
 
     cmd = message.command[0][1:]
     term = message.command[1]
-
     url, formatter = API_MAP[cmd]
 
     try:
         res = requests.get(url.format(term), timeout=30)
 
-        # JSON based APIs
         if cmd in ["vehicle", "ff"]:
-            data = res.json()
-            await message.reply(formatter(data), disable_web_page_preview=True)
+            await message.reply(
+                formatter(res.json()),
+                disable_web_page_preview=True
+            )
         else:
-            await message.reply(formatter(res.text), disable_web_page_preview=True)
+            await message.reply(
+                formatter(res.text),
+                disable_web_page_preview=True
+            )
 
-    except Exception as e:
+    except Exception:
         await message.reply("⚠️ API ERROR\nTry again later")
