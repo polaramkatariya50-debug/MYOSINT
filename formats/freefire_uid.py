@@ -1,41 +1,23 @@
 def freefire_uid_format(d):
-    return f"""
-╔══════════════════════════════════╗
+    return f"""╔══════════════════════════════════╗
 ║     🎮 FREE FIRE ID INFORMATION     ║
 ╚══════════════════════════════════╝
 
-📌 Data fetched for UID : {d['uid']}
+📌 Data fetched for UID : {d.get('uid','N/A')}
 
 ┌─ 👤 PROFILE DETAILS ─┐
- Nickname : {d['nickname']}
- User ID  : {d['uid']}
- Region   : {d['region']}
- Influencer : {d['influencer']}
+ Nickname : {d.get('nickname','N/A')}
+ User ID  : {d.get('uid','N/A')}
+ Region   : {d.get('region','N/A')}
+ Influencer : {d.get('influencer','No')}
 └───────────────────────┘
 
 ┌─ 🎖️ ACCOUNT STATS ─┐
- Level          : {d['level']}
- Experience XP  : {d['xp']}
- Ranked Points  : {d['rank']}
- Prime Status   : {d['prime']}
- Likes          : {d['likes']}
-└───────────────────────┘
-
-┌─ 👕 SKINS & PROFILE ─┐
- Skins Equipped : {d['skins']}
- Signature / Bio:
- {d['bio']}
-└───────────────────────┘
-
-┌─ ⏱️ ACCOUNT ACTIVITY ─┐
- Last Login     : {d['last_login']}
- Account Created : {d['created']}
- Profile Updated : {d['updated']}
-└───────────────────────┘
-
-┌─ 📆 FETCH TIME ─┐
- Date : {d['date']}
- Time : {d['time']}
+ Level          : {d.get('level','N/A')}
+ Experience XP  : {d.get('xp','N/A')}
+ Ranked Points  : {d.get('rank','N/A')}
+ Prime Status   : {d.get('prime','N/A')}
+ Likes          : {d.get('likes','N/A')}
 └───────────────────────┘
 
 ══════════════════════════════════
@@ -43,5 +25,4 @@ def freefire_uid_format(d):
 ══════════════════════════════════
 ══════════════════════════════════
           MADE BY - @LingTech_Dev
-══════════════════════════════════
-"""
+══════════════════════════════════"""
