@@ -1,41 +1,42 @@
 def vehicle_rc_format(d):
-    return f"""
-╔══════════════════════════════════╗
-║     🚗 VEHICLE DETAILS: {d['rc']}     ║
+    v = d.get("data",{})
+
+    return f"""╔══════════════════════════════════╗
+║     🚗 VEHICLE DETAILS: {v.get('rc','N/A')}     ║
 ╚══════════════════════════════════╝
 
 📸 CAR PHOTO:
-{d['photo']}
+{v.get('image','Not Available')}
 
 ┌─ 👤 OWNER INFORMATION ─┐
- Owner Name     : {d['owner']}
- Also Known As  : {d['aka']}
- Father’s Name : {d['father']}
+ Owner Name     : {v.get('owner','N/A')}
+ Also Known As  : {v.get('aka','N/A')}
+ Father’s Name : {v.get('father','N/A')}
 └───────────────────────┘
 
 ┌─ 🏠 ADDRESS DETAILS ─┐
- Address : {d['address']}
- City    : {d['city']}
- State   : {d['state']}
- Pincode : {d['pincode']}
+ Address : {v.get('address','N/A')}
+ City    : {v.get('city','N/A')}
+ State   : {v.get('state','N/A')}
+ Pincode : {v.get('pincode','N/A')}
 └───────────────────────┘
 
 ┌─ 🔧 VEHICLE SPECIFICATIONS ─┐
- Manufacturer  : {d['manufacturer']}
- Model         : {d['model']}
- Vehicle Class : {d['vehicle_class']}
- Fuel Type     : {d['fuel']}
+ Manufacturer  : {v.get('manufacturer','N/A')}
+ Model         : {v.get('model','N/A')}
+ Vehicle Class : {v.get('class','N/A')}
+ Fuel Type     : {v.get('fuel','N/A')}
 └───────────────────────┘
 
 ┌─ 📋 REGISTRATION DETAILS ─┐
- Registration No. : {d['rc']}
- Registration Dt.: {d['reg_date']}
- Registered RTO  : {d['rto']}
+ Registration No. : {v.get('rc','N/A')}
+ Registration Dt.: {v.get('reg_date','N/A')}
+ Registered RTO  : {v.get('rto','N/A')}
 └───────────────────────┘
 
 ┌─ 🛡 INSURANCE STATUS ─┐
- Insurance Valid Till : {d['insurance_valid']}
- Status               : {d['insurance_status']}
+ Insurance Valid Till : {v.get('insurance','N/A')}
+ Status               : {v.get('insurance_status','N/A')}
 └───────────────────────┘
 
 ══════════════════════════════════
@@ -43,5 +44,4 @@ def vehicle_rc_format(d):
 ══════════════════════════════════
 ══════════════════════════════════
           MADE BY - @LingTech_Dev
-══════════════════════════════════
-"""
+══════════════════════════════════"""
