@@ -59,39 +59,64 @@ API_MAP = {
 
 
 # ===============================
-# SEARCH HANDLER
+# SEARCH HANDLER (FINAL)
 # ===============================
-@Client.on_message(filters.command(list(API_MAP.keys())))
+@Client.on_message(filters.command())
 async def search_handler(client, message):
     user_id = message.from_user.id
 
-    # user check
+    # -------------------------------
+    # USER / CREDIT CHECK
+    # -------------------------------
     user = get_user(user_id)
     if not user or user.get("credits", 0) < SEARCH_COST:
         return await message.reply(
             "❌ NOT ENOUGH CREDITS\n💳 BUY CREDIT"
         )
 
-    # command format check
-    if len(message.command) != 2:
+    # -------------------------------
+    # COMMAND FORMAT CHECK
+    # -------------------------------
+    if not message.command or len(message.command) != 2:
         return await message.reply(
-            "❌ Usage:\n/command <value>"
+            "❌ Usage:\n"
+            "/num <number>\n"
+            "/paknum <number>\n"
+            "/vehicle <rc>\n"
+            "/vehmobile <rc>\n"
+            "/aadhar <aadhaar>\n"
+            "/ff <uid>\n"
+            "/ifsc <code>\n"
+            "/numtrace <number>\n"
+            "/fam <id>"
         )
 
-    # 🔥 IMPORTANT FIX
+    # -------------------------------
+    # COMMAND NORMALIZE
+    # -------------------------------
     cmd = message.command[0][1:].lower()
     term = message.command[1]
 
-    # 🔥 INVALID COMMAND SAFETY
+    # -------------------------------
+    # INVALID COMMAND SAFETY
+    # -------------------------------
     if cmd not in API_MAP:
         return await message.reply(
-            "❌ INVALID COMMAND\nUse /help to see available commands"
+            "❌ INVALID COMMAND\n\n"
+            "✅ Available Commands:\n"
+            "/num  /paknum\n"
+            "/vehicle  /vehmobile\n"
+            "/aadhar  /ff\n"
+            "/ifsc  /numtrace\n"
+            "/fam"
         )
 
     api_url, formatter = API_MAP[cmd]
 
+    # -------------------------------
+    # API REQUEST
+    # -------------------------------
     try:
-        # 🔥 Special handling for Pak API
         if cmd == "paknum":
             response = requests.get(
                 api_url.format(term),
@@ -119,12 +144,12 @@ async def search_handler(client, message):
 
         output = formatter(response.text)
 
-        if not output:
-            return await message.reply(
-                "❌ NO DATA FOUND"
-            )
+        if not output or "NO DATA" in output.upper():
+            return await message.reply("❌ NO DATA FOUND")
 
-        # 💳 credit cut ONLY after success
+        # -------------------------------
+        # CREDIT DEDUCT (SUCCESS ONLY)
+        # -------------------------------
         deduct_credit(user_id, SEARCH_COST)
 
         await message.reply(
