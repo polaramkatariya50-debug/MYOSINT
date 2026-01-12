@@ -3,10 +3,8 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# Telegram Bot
+# Telegram
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-
-# Telegram API (Pyrogram requirement)
 API_ID = int(os.getenv("API_ID"))
 API_HASH = os.getenv("API_HASH")
 
@@ -14,12 +12,12 @@ API_HASH = os.getenv("API_HASH")
 MONGO_URI = os.getenv("MONGO_URI")
 DB_NAME = os.getenv("DB_NAME", "vni0x")
 
-# Owner IDs (⚠️ tuple REQUIRED for pyrogram)
+# Owner (tuple required)
 OWNER_IDS = tuple(
     int(x) for x in os.getenv("OWNER_IDS", "").split(",") if x
 )
 
-# Must Join Channels
+# Must Join Channels (usernames only)
 MUST_JOIN_CHANNELS = [
     "whz_G-xn0KdkZWI1",
     "heroku_club",
@@ -28,8 +26,7 @@ MUST_JOIN_CHANNELS = [
     "Ah7RcBKx4zQ2YTE1",
 ]
 
-# Credit System
+# Credits
 SEARCH_COST = 2
 NEW_USER_CREDIT = 10
-REF_NEW_USER = 10
 REF_OWNER = 5
