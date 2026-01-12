@@ -65,24 +65,33 @@ API_MAP = {
 async def search_handler(client, message):
     user_id = message.from_user.id
 
+    # user check
     user = get_user(user_id)
     if not user or user.get("credits", 0) < SEARCH_COST:
         return await message.reply(
             "❌ NOT ENOUGH CREDITS\n💳 BUY CREDIT"
         )
 
+    # command format check
     if len(message.command) != 2:
         return await message.reply(
             "❌ Usage:\n/command <value>"
         )
 
-    cmd = message.command[0][1:]  # remove /
+    # 🔥 IMPORTANT FIX
+    cmd = message.command[0][1:].lower()
     term = message.command[1]
 
-    api_url, formatter = API_MAP.get(cmd)
+    # 🔥 INVALID COMMAND SAFETY
+    if cmd not in API_MAP:
+        return await message.reply(
+            "❌ INVALID COMMAND\nUse /help to see available commands"
+        )
+
+    api_url, formatter = API_MAP[cmd]
 
     try:
-        # 🔥 Pakistan API needs special handling
+        # 🔥 Special handling for Pak API
         if cmd == "paknum":
             response = requests.get(
                 api_url.format(term),
@@ -108,13 +117,14 @@ async def search_handler(client, message):
                 "❌ API TEMPORARILY DOWN\nTry again later."
             )
 
-        # format response
         output = formatter(response.text)
 
         if not output:
-            return await message.reply("❌ EMPTY RESPONSE FROM API")
+            return await message.reply(
+                "❌ NO DATA FOUND"
+            )
 
-        # 💳 Deduct credit ONLY on success
+        # 💳 credit cut ONLY after success
         deduct_credit(user_id, SEARCH_COST)
 
         await message.reply(
@@ -122,7 +132,7 @@ async def search_handler(client, message):
             disable_web_page_preview=True
         )
 
-    except Exception as e:
+    except Exception:
         await message.reply(
             "⚠️ API ERROR\nTry again later."
         )
