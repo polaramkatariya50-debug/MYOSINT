@@ -14,11 +14,10 @@ async def start(client, message):
         add_user(uid, ref)
 
     kb = InlineKeyboardMarkup([
-        [InlineKeyboardButton("✅ VERIFY", callback_data="verify")],
-        [InlineKeyboardButton("📢 JOIN CHANNELS", url="https://t.me/heroku_club")]
+        [InlineKeyboardButton("✅ VERIFY", callback_data="verify")]
     ])
 
     await message.reply(
-        "👋 WELCOME\n\n🔐 Join all channels & verify to get **10 FREE CREDITS**.",
+        "👋 Welcome!\n\nJoin all channels & click VERIFY to get 10 credits.",
         reply_markup=kb
     )
