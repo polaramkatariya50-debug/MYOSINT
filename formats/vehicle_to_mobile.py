@@ -1,12 +1,14 @@
-def vehicle_to_mobile_format(rc, mobile):
-    return f"""
-╔══════════════════════════════════╗
+import json
+
+def vehicle_to_mobile_format(raw):
+    d = json.loads(raw)
+    return f"""╔══════════════════════════════════╗
 ║   🚗 VEHICLE NUM TO OWNER NUM   ║
 ╚══════════════════════════════════╝
 
 ┌─ 🔍 MAPPING DETAILS ─┐
- Vehicle Number : {rc}
- Mobile Number  : {mobile}
+ Vehicle Number : {d.get('vehicle','N/A')}
+ Mobile Number  : {d.get('mobile','N/A')}
 └───────────────────────┘
 
 ┌─ ℹ️ STATUS INFO ─┐
@@ -19,5 +21,4 @@ def vehicle_to_mobile_format(rc, mobile):
 ══════════════════════════════════
 ══════════════════════════════════
           MADE BY - @LingTech_Dev
-══════════════════════════════════
-"""
+══════════════════════════════════"""
