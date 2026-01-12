@@ -1,10 +1,25 @@
-from pyrogram.errors import UserNotParticipant
-from config import MUST_JOIN_CHANNELS
+from pyrogram.errors import (
+    UserNotParticipant,
+    ChatAdminRequired,
+    PeerIdInvalid,
+)
 
 async def check_join(client, user_id):
-    for channel in MUST_JOIN_CHANNELS:
+    from config import MUST_JOIN_CHANNELS
+
+    for channel_id in MUST_JOIN_CHANNELS.keys():
         try:
-            await client.get_chat_member(channel, user_id)
+            await client.get_chat_member(channel_id, user_id)
+
         except UserNotParticipant:
             return False
+
+        except (ChatAdminRequired, PeerIdInvalid):
+            # Bot admin nahi / channel private
+            # Skip safely (no crash)
+            continue
+
+        except Exception:
+            continue
+
     return True
