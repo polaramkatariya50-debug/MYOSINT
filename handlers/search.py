@@ -15,55 +15,38 @@ from formats.fampay import fampay_format
 
 
 API_MAP = {
-    # 1️⃣ Indian Number
     "indian": (
         "https://subhxcosmo-osint-api.onrender.com/api?key=VNIOX&type=mobile&term={}",
         lambda text: indian_number_format(text)
     ),
-
-    # 2️⃣ Pakistan Number
     "pak": (
         "https://paknum.amorinthz.workers.dev/?key=AMORINTH&number={}",
         lambda text: pakistan_number_format(text)
     ),
-
-    # 3️⃣ Vehicle RC
     "vehicle": (
         "https://vnioxcyber.vercel.app/api/vehicle?rc={}",
         lambda data: vehicle_rc_format(data)
     ),
-
-    # 4️⃣ Vehicle → Owner Mobile
     "vehmobile": (
         "https://subhxcosmo-osint-api.onrender.com/api?key=VNIOX&type=vehicle_num&term={}",
         lambda text: vehicle_to_mobile_format(text)
     ),
-
-    # 5️⃣ Aadhaar → Family
     "aadhaar": (
         "https://subhxcosmo-osint-api.onrender.com/api?key=VNIOX&type=id_family&term={}",
         lambda text: aadhaar_family_format(text)
     ),
-
-    # 6️⃣ Free Fire UID
     "ff": (
         "https://api-cr-ffinfo.kesug.com/ff.php?uid={}",
         lambda data: freefire_uid_format(data)
     ),
-
-    # 7️⃣ Bank IFSC
     "ifsc": (
         "https://ab-ifscinfoapi.vercel.app/info?ifsc={}",
         lambda text: bank_ifsc_format(text)
     ),
-
-    # 8️⃣ Call Trace
     "trace": (
         "https://ab-calltraceapi.vercel.app/info?number={}",
         lambda text: call_trace_format(text)
     ),
-
-    # 9️⃣ FamPay
     "fampay": (
         "https://fampay-2-number.vercel.app/get-number?id={}",
         lambda text: fampay_format(text)
@@ -71,7 +54,7 @@ API_MAP = {
 }
 
 
-@Client.on_message(filters.command(API_MAP.keys()))
+@Client.on_message(filters.command(list(API_MAP.keys())))
 async def search_handler(client, message):
     user = get_user(message.from_user.id)
 
@@ -101,5 +84,5 @@ async def search_handler(client, message):
                 disable_web_page_preview=True
             )
 
-    except Exception:
+    except Exception as e:
         await message.reply("⚠️ API ERROR\nTry again later")
