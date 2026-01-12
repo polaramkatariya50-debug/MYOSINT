@@ -4,4 +4,5 @@ from database import users
 
 @Client.on_message(filters.command("stats") & filters.user(OWNER_IDS))
 async def stats(client, message):
-    await message.reply(f"📊 TOTAL USERS: {users.count_documents({})}")
+    total = users.count_documents({})
+    await message.reply(f"📊 TOTAL USERS: {total}")
