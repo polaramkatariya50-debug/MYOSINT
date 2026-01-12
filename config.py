@@ -4,8 +4,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BOT_TOKEN = os.getenv("8556191807:AAGt7noEjSaRlxZChZPFCorb3DlaxcTO_X0")
+
+API_ID = int(os.getenv("28795512"))
+API_HASH = os.getenv("c17e4eb6d994c9892b8a8b6bfea4042a")
+
 MONGO_URI = os.getenv("mongodb+srv://vishalpandeynkp:Bal6Y6FZeQeoAoqV@cluster0.dzgwt.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 DB_NAME = os.getenv("DB_NAME", "vni0x")
+
 OWNER_IDS = {int(x) for x in os.getenv("OWNER_IDS", "").split(",") if x}
 
 MUST_JOIN_CHANNELS = [
