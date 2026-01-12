@@ -14,8 +14,10 @@ API_HASH = os.getenv("API_HASH")
 MONGO_URI = os.getenv("MONGO_URI")
 DB_NAME = os.getenv("DB_NAME", "vni0x")
 
-# Owner
-OWNER_IDS = {int(x) for x in os.getenv("OWNER_IDS", "").split(",") if x}
+# Owner IDs (⚠️ tuple REQUIRED for pyrogram)
+OWNER_IDS = tuple(
+    int(x) for x in os.getenv("OWNER_IDS", "").split(",") if x
+)
 
 # Must Join Channels
 MUST_JOIN_CHANNELS = [
@@ -26,7 +28,7 @@ MUST_JOIN_CHANNELS = [
     "Ah7RcBKx4zQ2YTE1",
 ]
 
-# Credits
+# Credit System
 SEARCH_COST = 2
 NEW_USER_CREDIT = 10
 REF_NEW_USER = 10
